@@ -43,6 +43,12 @@ export class AuthService {
 
         await this.verifyPassword(user, password);
 
+        return this.generateAccessAndRefreshToken(user.id);
+    }
+
+    async generateAccessAndRefreshToken(userId: number){
+        const user: UserBaseDto = await this.userService.findOneById(userId);
+
         const accessTokenPayload: AccessTokenPayload = {userId: user.id, email: user.email};
         const refreshTokenPayload: RefreshTokenPayload = {userId: user.id};
 

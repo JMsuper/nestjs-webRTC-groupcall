@@ -9,6 +9,7 @@ import { UserRepository } from "../../src/user/user.repository";
 import { DataSource } from "typeorm";
 import { AuthService } from "../../src/auth/auth.service";
 import { JwtService } from "@nestjs/jwt";
+import { RefreshTokenPayload } from "../../src/common/payload";
 
 
 describe('AuthController (e2e)', () => {
@@ -186,6 +187,38 @@ describe('AuthController (e2e)', () => {
 
             //then
             expect(response.status).toEqual(HttpStatus.UNAUTHORIZED);
+        });
+
+    });
+
+    describe("Post /auth/refresh", () => {
+
+        it("SUCCESS", async () => {
+            //given
+            const refreshTokenPayload: RefreshTokenPayload = {userId: 1};
+            const refreshToken = await jwtService.signAsync(refreshTokenPayload, {expiresIn: '30m'});
+
+            //when
+            const response = await request(app.getHttpServer())
+            .post('/auth/refresh')
+            .set("Cookie", `refreshToken=${refreshToken}`)
+            .send()
+
+            //then
+            expect(response.status).toEqual(HttpStatus.OK);
+            expect(response.headers['authorization']).toBeTruthy();
+        });
+
+        it("FAIL: not have refresh token", async () => {
+            //given
+            //when
+            const response = await request(app.getHttpServer())
+            .post('/auth/refresh')
+            .send()
+
+            //then
+            expect(response.status).toEqual(HttpStatus.UNAUTHORIZED);
+            expect(response.headers['authorization']).not.toBeTruthy();
         });
 
     });
