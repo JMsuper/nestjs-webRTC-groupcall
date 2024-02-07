@@ -8,6 +8,6 @@ export const typeormtestConfig : TypeOrmModuleOptions = {
     password: '532621',
     database: 'groupcall_test',
     entities: [__dirname + '/../**/*.entity.{js,ts}'],
-    // logging: true,
+    logging: true,
     synchronize: true
 }

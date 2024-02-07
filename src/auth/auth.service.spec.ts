@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
-import { UserModule } from '../user/user.module';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
 import { UnauthorizedException } from '@nestjs/common';
@@ -74,7 +73,7 @@ describe('AuthService', () => {
       //given
       const user: UserBaseDto = new UserBaseDto();
       user.password = await authService.encryptPassword("1234");
-      const password = await authService.encryptPassword("1234");
+      const password = "1234";
   
       //when
       const result = await authService.verifyPassword(user,password);

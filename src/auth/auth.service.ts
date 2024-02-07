@@ -26,7 +26,11 @@ export class AuthService {
         }
 
         password = await this.encryptPassword(password);
-        const userBaseDto: UserBaseDto = createUserDto.toUserBaseDto();
+
+        var userBaseDto: UserBaseDto = new UserBaseDto();
+        userBaseDto.email = email;
+        userBaseDto.password = password;
+        userBaseDto.name = name;
 
         const createdUser: UserBaseDto = await this.userService.save(userBaseDto);
 
@@ -56,7 +60,7 @@ export class AuthService {
 
         user.password = await this.encryptPassword(user.password);
         
-         this.userService.save(user);
+        this.userService.save(user);
 
     }
 
@@ -68,7 +72,8 @@ export class AuthService {
      * @throws UnauthorizedException, if email not exist or password not correct
      */
     async verifyPassword(user: UserBaseDto, password: string){
-        if(! user || await bcrypt.compare(user.password,password)){
+        console.log(user, password);
+        if( ! user || ! await bcrypt.compare(password,user.password)){
             throw new UnauthorizedException("Email not exist, or password not correct");
         }
     }
