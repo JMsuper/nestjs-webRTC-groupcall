@@ -1,7 +1,7 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, Request, Res, SetMetadata, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Patch, Post, Req, Request, Res, SetMetadata, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SkipAuth } from './auth-meta';
-import { CreateUserDto, LoginDto } from '../user/user.dto';
+import { CreateUserDto, LoginDto, PasswordUpdateUserDto } from '../user/user.dto';
 import { Response } from 'express';
 
 @Controller('auth')
@@ -29,14 +29,11 @@ export class AuthController {
         return res.send({success : true})
     }
 
-    // @Get('profile')
-    // getProfile(@Request() req){
-    //     return req.userId;
-    // }
+    @HttpCode(HttpStatus.CREATED)
+    @Patch('/password')
+    async updatePassword(@Body() passwordUpdateUserDto: PasswordUpdateUserDto){
 
-    // @SkipAuth()
-    // @Get('/')
-    // findAll(){
-    //     return "hello";
-    // }
+        await this.authService.updatePassword(passwordUpdateUserDto);
+        return {sucess: true};
+    }
 }

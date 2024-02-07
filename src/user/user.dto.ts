@@ -35,9 +35,9 @@ export class CreateUserDto extends OmitType(UserBaseDto, ['id']){}
 
 export class NoPasswordUserDto extends OmitType(UserBaseDto, ['password']){}
 
-export class NameUpdateUserDto extends PickType(UserBaseDto, ['id','name']){}
+export class NameUpdateUserDto extends OmitType(UserBaseDto, ['email','password']){}
 
-export class PasswordUpdateUserDto extends OmitType(UserBaseDto, ['id']){
+export class PasswordUpdateUserDto extends OmitType(UserBaseDto, ['id','name']){
     @IsString()
     @MinLength(8)
     newPassword: string;

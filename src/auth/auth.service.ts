@@ -58,10 +58,10 @@ export class AuthService {
         const user: UserBaseDto = await this.userService.findOneByEmail(email);
         await this.verifyPassword(user, password);
 
+        user.password = newPassword;
         user.password = await this.encryptPassword(user.password);
         
-        this.userService.save(user);
-
+       await this.userService.save(user);
     }
 
     async encryptPassword(password: string): Promise<string>{
