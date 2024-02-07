@@ -38,6 +38,11 @@ export class UserService {
         return UserBaseDto.of(updatedUser);
     }
 
+    async deleteUser(userId: number){
+        const user: User = await this.userRepository.findOneBy({id: userId});
+        await this.userRepository.softRemove(user);
+    }
+
     isDuplicatedEmail(user: UserBaseDto, email: string): boolean {
         if(user?.email === email){
             return true;

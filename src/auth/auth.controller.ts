@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, HttpCode, HttpStatus, Patch, Post, Req, Request, Res, SetMetadata, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Patch, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SkipAuth } from './auth-meta';
 import { CreateUserDto, LoginDto, PasswordUpdateUserDto, UserBaseDto } from '../user/user.dto';
@@ -9,7 +9,6 @@ import { RefreshAuthGuard } from '../common/refresh.auth.guard';
 export class AuthController {
 
     constructor(private authService: AuthService){}
-
 
     @HttpCode(HttpStatus.CREATED)
     @SkipAuth()
