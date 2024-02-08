@@ -1,6 +1,6 @@
-import { BaseEntity, Column, DeleteDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, Unique } from "typeorm";
+import { BaseEntity, Column, DeleteDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Unique } from "typeorm";
 import { CodeType } from "./codetype";
-import { Group } from "../group/group.entity";
+import { Team } from "../team/team.entity";
 
 
 @Entity()
@@ -8,6 +8,9 @@ import { Group } from "../group/group.entity";
 export class Code extends BaseEntity{
     @PrimaryGeneratedColumn()
     id: number;
+
+    @Column({nullable: true})
+    teamId: number;
 
     @Column({nullable: false})
     name: string;
@@ -18,6 +21,7 @@ export class Code extends BaseEntity{
     @DeleteDateColumn()
     deletedAt: Date;
 
-    @ManyToOne(() => Group, (group) => group.codes)
-    group: Group;
+    @ManyToOne(() => Team, (team) => team.codes)
+    @JoinColumn({name: 'teamId', referencedColumnName: 'id'})
+    team: Team;
 }

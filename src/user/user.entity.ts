@@ -1,4 +1,5 @@
-import { BaseEntity, Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, Unique } from "typeorm";
+import { JoinGroup } from "../joingroup/joingroup.entity";
+import { BaseEntity, Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
 
 @Entity()
 @Unique(['email'])
@@ -20,4 +21,7 @@ export class User extends BaseEntity{
 
     @DeleteDateColumn()
     deletedAt: Date;
+
+    @OneToMany(() => JoinGroup, joinGroup => joinGroup.userId)
+    joinTeams: JoinGroup[]
 }

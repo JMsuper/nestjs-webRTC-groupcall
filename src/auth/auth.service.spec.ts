@@ -3,9 +3,8 @@ import { AuthService } from './auth.service';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
 import { UnauthorizedException } from '@nestjs/common';
-import { CreateUserDto, UserBaseDto } from '../user/user.dto';
+import { UserBaseDto } from '../user/user.dto';
 import { jwtConstants } from '../common/constants';
-import { User } from '../user/user.entity';
 
 const mockUserService = {
   findOneByEmail : jest.fn(),

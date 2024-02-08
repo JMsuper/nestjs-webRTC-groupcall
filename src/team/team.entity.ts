@@ -1,8 +1,9 @@
+import { JoinGroup } from "../joingroup/joingroup.entity";
 import { Code } from "../code/code.entity";
 import { BaseEntity, Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
-export class Group extends BaseEntity{
+export class Team extends BaseEntity{
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -18,7 +19,9 @@ export class Group extends BaseEntity{
     @DeleteDateColumn()
     deletedAt: Date;
 
-    @OneToMany(() => Code, (code) => code.group)
-    @JoinColumn({name: 'codeId'})
+    @OneToMany(() => Code, (code) => code.team)
     codes: Code[]
+
+    @OneToMany(() => JoinGroup, joinGroup => joinGroup.team)
+    joinUsers: JoinGroup[]
 }

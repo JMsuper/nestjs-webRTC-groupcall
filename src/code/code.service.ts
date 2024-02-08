@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CodeRepository } from './code.repository';
 import { Code } from './code.entity';
-import { Group } from 'src/group/group.entity';
+import { Team } from 'src/team/team.entity';
 import { CodeType } from './codetype';
 import { CodeBaseDto } from './code.dto';
 
@@ -17,20 +17,20 @@ export class CodeService {
     }
 
     // 관리자 코드 생성
-    async createManagerCode(group: Group){
-        return this.createCode(group, CodeType.MANAGER);
+    async createManagerCode(team: Team){
+        return this.createCode(team, CodeType.MANAGER);
     }
 
     // 참가자 코드 생성
-    createParticipantCode(group: Group){
-        return this.createCode(group, CodeType.PARTICIPANT);
+    createParticipantCode(team: Team){
+        return this.createCode(team, CodeType.PARTICIPANT);
     }
 
-    async createCode(group: Group, codetype: CodeType){
+    async createCode(team: Team, codetype: CodeType){
         const codeString: string = await this.createUniqueStringCode();
         
         const code: Code = this.codeRepository.create()
-        code.group = group;
+        code.team = team;
         code.name = codeString;
         code.type = codetype;
 
@@ -73,10 +73,21 @@ export class CodeService {
         return true;
     }
 
-    // 코드와 연결된 그룹ID 반환
-    async getGroupByCode(codeString: string): Promise<number>{
-        const code: Code = await this.codeRepository.findOne({where:{name: codeString}, relations: ['group']})
-        return code.group.id;
+    // 코드와 연결된 팀 반환
+    async getTeamByCode(codeString: string): Promise<Team>{
+        const code: Code = await this.codeRepository.findOne({where:{name: codeString}, relations: ['team']})
+        if(!code){
+            throw new BadRequestException("존재하지 않는 코드입니다.")
+        }
+        return code.team;
+    }
+
+    async getTypeOfCode(codeString: string){
+        const code: Code = await this.codeRepository.findOneBy({name: codeString});
+        if(!code){
+            throw new BadRequestException("존재하지 않는 코드입니다.")
+        }
+        return code.type;
     }
 
 }
