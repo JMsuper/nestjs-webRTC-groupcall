@@ -1,8 +1,7 @@
-import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
-import { CreateUserDto, NameUpdateUserDto, NoPasswordUserDto, PasswordUpdateUserDto, UserBaseDto } from './user.dto';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { NameUpdateUserDto, UserBaseDto } from './user.dto';
 import { User } from './user.entity';
 import { UserRepository } from './user.repository';
-import { InjectRepository } from '@nestjs/typeorm';
 
 
 @Injectable()

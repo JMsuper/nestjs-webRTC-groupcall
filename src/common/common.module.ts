@@ -1,8 +1,9 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './jwt.auth.guard';
 import { RefreshAuthGuard } from './refresh.auth.guard';
 
+@Global()
 @Module({
     providers:[
         {
