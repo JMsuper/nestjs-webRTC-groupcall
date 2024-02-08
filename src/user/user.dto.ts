@@ -33,7 +33,15 @@ export class LoginDto extends PickType(UserBaseDto, ['email','password']){}
 
 export class CreateUserDto extends OmitType(UserBaseDto, ['id']){}
 
-export class NoPasswordUserDto extends OmitType(UserBaseDto, ['password']){}
+export class NoPasswordUserDto extends OmitType(UserBaseDto, ['password']){
+    static of = (user: UserBaseDto) => {
+        const dto: NoPasswordUserDto = new NoPasswordUserDto();
+        dto.id = user.id;
+        dto.email = user.email;
+        dto.name = user.name;
+        return dto;
+    }
+}
 
 export class NameUpdateUserDto extends OmitType(UserBaseDto, ['email','password']){}
 

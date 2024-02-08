@@ -32,7 +32,15 @@ export class RefreshAuthGuard implements CanActivate{
     }
 
     private extractTokenFromHeader(request: Request): string {
-        return request.cookies['refreshToken'];
+        console.log(request.cookies)
+        try{
+            return request.cookies['refreshToken'];
+        }catch(error){
+            if(error instanceof TypeError){
+                return null;
+            }
+        }
+        
     }
     
 }

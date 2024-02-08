@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { AccessTokenPayload, RefreshTokenPayload } from '../common/payload';
-import { CreateUserDto, LoginDto, PasswordUpdateUserDto, UserBaseDto } from '../user/user.dto';
+import { CreateUserDto, LoginDto, NoPasswordUserDto, PasswordUpdateUserDto, UserBaseDto } from '../user/user.dto';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -16,7 +16,7 @@ export class AuthService {
     /**
      * @throws BadRequestException("Duplicated email")
      */
-    async signUp(createUserDto: CreateUserDto): Promise<UserBaseDto>{
+    async signUp(createUserDto: CreateUserDto): Promise<NoPasswordUserDto>{
         var {email, password, name} = createUserDto;
 
         const foundUser: UserBaseDto = await this.userService.findOneByEmail(createUserDto.email)
@@ -32,9 +32,9 @@ export class AuthService {
         userBaseDto.password = password;
         userBaseDto.name = name;
 
-        const createdUser: UserBaseDto = await this.userService.save(userBaseDto);
+        const result = await this.userService.save(userBaseDto);
 
-        return createdUser;
+        return NoPasswordUserDto.of(result);
     }
 
     async signIn(loginDto: LoginDto): Promise<any>{
@@ -58,7 +58,7 @@ export class AuthService {
         }
     }
 
-    async updatePassword(passwordUpdateUserDto: PasswordUpdateUserDto){
+    async updatePassword(passwordUpdateUserDto: PasswordUpdateUserDto): Promise<UserBaseDto>{
         const {email, password, newPassword} = passwordUpdateUserDto;
 
         const user: UserBaseDto = await this.userService.findOneByEmail(email);
@@ -67,7 +67,7 @@ export class AuthService {
         user.password = newPassword;
         user.password = await this.encryptPassword(user.password);
         
-       await this.userService.save(user);
+       return this.userService.save(user);
     }
 
     async encryptPassword(password: string): Promise<string>{
@@ -78,7 +78,6 @@ export class AuthService {
      * @throws UnauthorizedException, if email not exist or password not correct
      */
     async verifyPassword(user: UserBaseDto, password: string){
-        console.log(user, password);
         if( ! user || ! await bcrypt.compare(password,user.password)){
             throw new UnauthorizedException("Email not exist, or password not correct");
         }

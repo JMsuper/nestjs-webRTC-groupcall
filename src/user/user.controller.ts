@@ -1,7 +1,5 @@
-import { BadRequestException, Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Req, UnauthorizedException, ValidationPipe } from '@nestjs/common';
+import { BadRequestException, Controller, Delete, Get, HttpCode, HttpStatus, Param, Req, UnauthorizedException, } from '@nestjs/common';
 import { UserService } from './user.service';
-import { Request } from 'express';
-import { CreateUserDto, UserBaseDto } from './user.dto';
 
 @Controller('user')
 export class UserController {
@@ -13,7 +11,7 @@ export class UserController {
         const user = await this.userService.findOneById(requestId);
 
         if(!user){
-            throw new BadRequestException("not exist user id");
+            throw new BadRequestException(`not exist user id : ${requestId}`);
         }
         const {password, ...result} = user;
         
@@ -23,7 +21,7 @@ export class UserController {
     @HttpCode(HttpStatus.ACCEPTED)
     @Delete('/:id')
     async deleteUser(@Param('id') id: number, @Req() req){
-        const userId = req.user.userId;
+        const userId = req.userId;
         if(id != userId){
             throw new UnauthorizedException("해당 사용자를 삭제할 권한이 없습니다.");
         }
