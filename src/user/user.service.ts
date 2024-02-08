@@ -31,7 +31,7 @@ export class UserService {
         const user: User = await this.userRepository.findOneBy({id});
 
         if(!user){
-            throw new BadRequestException("Not exist Id : ${id}");
+            throw new BadRequestException(`Not exist Id : ${id}`);
         }
         user.name = name;
         const updatedUser = await this.userRepository.save(user);
@@ -40,6 +40,11 @@ export class UserService {
 
     async deleteUser(userId: number){
         const user: User = await this.userRepository.findOneBy({id: userId});
+
+        if(!user){
+            throw new BadRequestException(`Not exist Id : ${userId}`);
+        }
+
         await this.userRepository.softRemove(user);
     }
 

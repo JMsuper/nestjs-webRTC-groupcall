@@ -3,12 +3,15 @@ import { AuthService } from './auth.service';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
 import { UnauthorizedException } from '@nestjs/common';
-import { UserBaseDto } from '../user/user.dto';
+import { CreateUserDto, UserBaseDto } from '../user/user.dto';
 import { jwtConstants } from '../common/constants';
+import { User } from '../user/user.entity';
 
 const mockUserService = {
   findOneByEmail : jest.fn(),
-  findMyProfile : jest.fn()
+  findOneById : jest.fn(),
+  findMyProfile : jest.fn(),
+  save : jest.fn()
 }
 
 describe('AuthService', () => {
@@ -28,6 +31,33 @@ describe('AuthService', () => {
     authService = module.get<AuthService>(AuthService);
     userService = module.get<UserService>(UserService);
     jwtService = await module.resolve(JwtService);
+  });
+
+  describe('signIn', ()=>{
+    
+    it('Given_CorrectLoginInfo_When_SignIn_Then_Tokens', async ()=>{
+      //given
+      const email = "email@g.naver";
+      const password = '1234';
+      const encryptPassword = await authService.encryptPassword(password);
+
+      const userBaseDto = new UserBaseDto();
+      userBaseDto.id = 1;
+      userBaseDto.email = email;
+      userBaseDto.password = encryptPassword;
+
+      jest.spyOn(userService, 'findOneByEmail').mockResolvedValue(userBaseDto);
+      jest.spyOn(userService, 'findOneById').mockResolvedValue(userBaseDto);
+
+      //when
+      const result = await authService.signIn({email, password});
+
+      //then
+      expect(result.access_token).toBeTruthy()
+      expect(result.refresh_token).toBeTruthy()
+      expect(result.access_token).not.toEqual(result.refresh_token);
+    });
+  
   });
 
   describe('encryptPassword', ()=>{

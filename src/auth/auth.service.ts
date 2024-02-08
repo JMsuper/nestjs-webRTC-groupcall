@@ -58,7 +58,7 @@ export class AuthService {
         }
     }
 
-    async updatePassword(passwordUpdateUserDto: PasswordUpdateUserDto){
+    async updatePassword(passwordUpdateUserDto: PasswordUpdateUserDto): Promise<UserBaseDto>{
         const {email, password, newPassword} = passwordUpdateUserDto;
 
         const user: UserBaseDto = await this.userService.findOneByEmail(email);
@@ -67,7 +67,7 @@ export class AuthService {
         user.password = newPassword;
         user.password = await this.encryptPassword(user.password);
         
-       await this.userService.save(user);
+       return this.userService.save(user);
     }
 
     async encryptPassword(password: string): Promise<string>{
@@ -78,7 +78,6 @@ export class AuthService {
      * @throws UnauthorizedException, if email not exist or password not correct
      */
     async verifyPassword(user: UserBaseDto, password: string){
-        console.log(user, password);
         if( ! user || ! await bcrypt.compare(password,user.password)){
             throw new UnauthorizedException("Email not exist, or password not correct");
         }

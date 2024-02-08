@@ -1,7 +1,5 @@
 import { BadRequestException, Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Req, UnauthorizedException, ValidationPipe } from '@nestjs/common';
 import { UserService } from './user.service';
-import { Request } from 'express';
-import { CreateUserDto, UserBaseDto } from './user.dto';
 
 @Controller('user')
 export class UserController {
