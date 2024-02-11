@@ -12,8 +12,7 @@ import { CommonModule } from '../common/common.module';
     CommonModule,
     JwtModule.register({
       global: true,
-      secret: jwtConstants.secret,
-      signOptions: {expiresIn: '60s'}
+      secret: jwtConstants.secret
   })],
   controllers: [AuthController],
   providers: [AuthService],

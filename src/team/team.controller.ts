@@ -1,6 +1,6 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Req } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Param, Patch, Post, Req } from '@nestjs/common';
 import { TeamService } from './team.service';
-import { CreateTeamDto, TeamJoinDto, UpdateTeamDto } from './team.dto';
+import { ChangeRoleDto, CreateTeamDto, TeamJoinDto, TeamMemberSelectDto, UpdateTeamDto } from './team.dto';
 import { JoingroupService } from '../joingroup/joingroup.service';
 
 @Controller('team')
@@ -47,6 +47,39 @@ export class TeamController {
     async deleteTeam(@Param('teamId') teamId: number, @Req() req){
         const userId = req.userId;
         await this.teamService.deleteTeam(userId,teamId);
+        return {"success":true};
+    }    
+
+    @Post('/:teamId/ban')
+    async banTeamMember(@Param('teamId') teamId: number, @Body() teamBanDto:TeamMemberSelectDto, @Req() req){
+        const userId = req.userId;
+        const banUserId = teamBanDto.userId;
+
+        if(userId === banUserId){
+            throw new BadRequestException("본인을 추방할 수는 없습니다.");
+        }
+        
+        await this.joinGroupService.banTeamMember(teamId, userId, banUserId);
+
+        return {"success":true};
+    }
+
+    @Patch('/:teamId/change')
+    async changeTeamMemberRole(@Param('teamId') teamId: number, @Body() changeRoleDto:ChangeRoleDto, @Req() req){
+        const userId = req.userId;
+        const {selectedUserId, roleType} = changeRoleDto;
+
+
+        // 본인의 역학을 변경하는 경우
+        if(userId === selectedUserId){
+            await this.joinGroupService.changeMyRoleToParticipant(teamId,userId,roleType);
+        }
+
+        // 다른 팀원의 역할을 변경하는 경우
+        else{
+            await this.joinGroupService.changeMemberRoleInTeam(teamId,userId,selectedUserId,roleType);
+        }
+
         return {"success":true};
     }
 

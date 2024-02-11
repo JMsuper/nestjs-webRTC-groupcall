@@ -53,8 +53,8 @@ export class AuthService {
         const refreshTokenPayload: RefreshTokenPayload = {userId: user.id};
 
         return {
-            access_token: await this.jwtService.signAsync(accessTokenPayload, {expiresIn: '30m'}),
-            refresh_token: await this.jwtService.signAsync(refreshTokenPayload, {expiresIn: '1h'})
+            access_token: await this.jwtService.signAsync(accessTokenPayload, {expiresIn: '2h'}),
+            refresh_token: await this.jwtService.signAsync(refreshTokenPayload, {expiresIn: '4h'})
         }
     }
 
