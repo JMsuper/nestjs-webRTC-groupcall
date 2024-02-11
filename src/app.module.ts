@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { CommonModule } from './common/common.module';
@@ -8,6 +8,7 @@ import { CodeModule } from './code/code.module';
 import { DevtoolsModule } from '@nestjs/devtools-integration';
 import { JoingroupModule } from './joingroup/joingroup.module';
 import { TeamModule } from './team/team.module';
+import { AppLoggerMiddleware } from './common/app-logger';
 
 @Module({
   imports: [
@@ -15,4 +16,8 @@ import { TeamModule } from './team/team.module';
       http: process.env.NODE_ENV !== 'production'
     }),UserModule, AuthModule, CommonModule, TypeOrmModule.forRoot(typeormConfig), TeamModule, CodeModule, JoingroupModule],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(AppLoggerMiddleware).forRoutes('*');
+  }
+}

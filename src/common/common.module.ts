@@ -2,6 +2,7 @@ import { Global, Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './jwt.auth.guard';
 import { RefreshAuthGuard } from './refresh.auth.guard';
+import { AppLoggerMiddleware } from './app-logger';
 
 @Global()
 @Module({
@@ -10,8 +11,9 @@ import { RefreshAuthGuard } from './refresh.auth.guard';
             provide: APP_GUARD,
             useClass: JwtAuthGuard
         },
-        RefreshAuthGuard
+        RefreshAuthGuard,
+        AppLoggerMiddleware
     ],
-    exports: [RefreshAuthGuard]
+    exports: [RefreshAuthGuard,AppLoggerMiddleware]
 })
 export class CommonModule {}

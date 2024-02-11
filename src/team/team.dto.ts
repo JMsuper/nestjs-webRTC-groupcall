@@ -1,7 +1,7 @@
 import { OmitType, PickType } from "@nestjs/mapped-types";
 import { Team } from "./team.entity";
 import { IsEnum, IsNotEmpty, IsNumber, IsString } from "class-validator";
-import { CodeType } from "src/code/codetype";
+import { CodeType } from "../code/codetype";
 
 export class TeamBaseDto{
     @IsNumber()

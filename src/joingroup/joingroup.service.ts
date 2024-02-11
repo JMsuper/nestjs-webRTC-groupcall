@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JoingroupRepository } from './joingroup.repository';
-import { CodeService } from 'src/code/code.service';
+import { CodeService } from '../code/code.service';
 import { Team } from '../team/team.entity';
 import { CodeType } from '../code/codetype';
 import { JoinGroup } from './joingroup.entity';
