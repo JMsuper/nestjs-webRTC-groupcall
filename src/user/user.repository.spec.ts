@@ -3,8 +3,8 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { UserModule } from "./user.module";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { User } from "./user.entity";
-import { typeormtestConfig } from "../config/typeorm.test.config";
-import { DataSource, QueryFailedError, getConnection } from "typeorm";
+import { DataSource, LessThan, MoreThan, QueryFailedError } from "typeorm";
+import { typeormConfig } from "../config/typeorm.config";
 
 describe('UserRepository', () => {
     let userRepository : UserRepository;
@@ -12,15 +12,15 @@ describe('UserRepository', () => {
 
     beforeAll(async () => {
         const module: TestingModule = await Test.createTestingModule({
-            imports: [UserModule,TypeOrmModule.forRoot(typeormtestConfig)] 
+            imports: [UserModule,TypeOrmModule.forRoot(typeormConfig)] 
         }).compile();
 
         userRepository = module.get<UserRepository>(UserRepository);
         dataSource = module.get<DataSource>(DataSource);
     });
 
-    afterEach(async () => {
-        await userRepository.clear();
+    beforeEach(async () => {
+        await userRepository.delete({id: MoreThan(0)});
     });
 
     afterAll(async () => {

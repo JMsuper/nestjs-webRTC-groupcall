@@ -1,6 +1,7 @@
 import { OmitType, PickType } from "@nestjs/mapped-types";
 import { Team } from "./team.entity";
-import { IsNotEmpty, IsNumber, IsString, Length } from "class-validator";
+import { IsEnum, IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { CodeType } from "../code/codetype";
 
 export class TeamBaseDto{
     @IsNumber()
@@ -37,4 +38,25 @@ export class TeamBaseDtoWithCode extends TeamBaseDto{
 export class TeamJoinDto{
     @IsNotEmpty()
     code: string
+}
+
+export class TeamExitDto{
+    @IsNotEmpty()
+    @IsNumber()
+    teamId: number
+}
+
+export class TeamMemberSelectDto{
+    @IsNotEmpty()
+    @IsNumber()
+    userId: number
+}
+
+export class ChangeRoleDto{
+    @IsNotEmpty()
+    @IsNumber()
+    selectedUserId: number
+
+    @IsEnum(CodeType)
+    roleType: CodeType
 }
